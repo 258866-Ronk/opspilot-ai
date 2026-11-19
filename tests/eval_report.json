@@ -1,0 +1,403 @@
+{
+  "total_cases": 32,
+  "tool_selection_accuracy": 0.99,
+  "keyword_hit_rate": 0.859,
+  "avg_duration_ms": 70,
+  "details": [
+    {
+      "id": "TC001",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 176
+    },
+    {
+      "id": "TC002",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 69
+    },
+    {
+      "id": "TC003",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 69
+    },
+    {
+      "id": "TC004",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC005",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC006",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 84
+    },
+    {
+      "id": "TC007",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 65
+    },
+    {
+      "id": "TC008",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 70
+    },
+    {
+      "id": "TC009",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 67
+    },
+    {
+      "id": "TC010",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 65
+    },
+    {
+      "id": "TC011",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 68
+    },
+    {
+      "id": "TC012",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 67
+    },
+    {
+      "id": "TC013",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC014",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC015",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 64
+    },
+    {
+      "id": "TC016",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 67
+    },
+    {
+      "id": "TC017",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 65
+    },
+    {
+      "id": "TC018",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC019",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 64
+    },
+    {
+      "id": "TC020",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 64
+    },
+    {
+      "id": "TC021",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC022",
+      "status": "COMPLETED",
+      "tools_ok": 0.67,
+      "kw_ok": 0.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 69
+    },
+    {
+      "id": "TC023",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 70
+    },
+    {
+      "id": "TC024",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC025",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 65
+    },
+    {
+      "id": "TC026",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 68
+    },
+    {
+      "id": "TC027",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC028",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 70
+    },
+    {
+      "id": "TC029",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 68
+    },
+    {
+      "id": "TC030",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "search_logs"
+      ],
+      "duration_ms": 66
+    },
+    {
+      "id": "TC031",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 1.0,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 68
+    },
+    {
+      "id": "TC032",
+      "status": "COMPLETED",
+      "tools_ok": 1.0,
+      "kw_ok": 0.5,
+      "actual_tools": [
+        "rag_search",
+        "query_metrics",
+        "diagnose_database",
+        "search_logs"
+      ],
+      "duration_ms": 67
+    }
+  ]
+}

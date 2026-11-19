@@ -1,0 +1,28 @@
+# 环境/密钥
+.env
+backend/.env
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# 数据
+backend/data/
+*.db
+*.sqlite3
+backend/data/uploads/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Node（若用 Vue3 版）
+node_modules/
+dist/

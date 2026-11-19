@@ -1,0 +1,41 @@
+# OpsPilot AI 生产级基础设施（PostgreSQL + pgvector + Redis）
+# 开发演示可忽略本文件——默认 SQLite 零依赖即可运行。
+# 启动：docker compose up -d
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: opspilot-postgres
+    environment:
+      POSTGRES_DB: opspilot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d opspilot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: opspilot-redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # 后端（可选，需要构建镜像）
+  # backend:
+  #   build: ./backend
+  #   ports: ["8000:8000"]
+  #   depends_on: [postgres, redis]
+  #   env_file: ./backend/.env
+
+volumes:
+  postgres_data:
+  redis_data:

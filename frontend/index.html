@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpsPilot AI · 企业级智能运维 Agent 平台</title>
+<style>
+  :root{
+    --primary:#2563eb; --primary-d:#1d4ed8; --bg:#f1f5f9; --card:#fff;
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --ok:#16a34a;
+    --warn:#f59e0b; --err:#dc2626; --shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  body{background:var(--bg);color:var(--ink);font-size:14px}
+  /* ---------- 登录 ---------- */
+  #login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);z-index:100}
+  .login-box{width:380px;background:#fff;border-radius:16px;padding:36px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+  .login-box h1{font-size:22px;margin-bottom:4px}
+  .login-box .sub{color:var(--muted);margin-bottom:24px;font-size:13px}
+  .login-box label{display:block;margin:14px 0 6px;font-weight:600;font-size:13px}
+  .login-box input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;outline:none}
+  .login-box input:focus{border-color:var(--primary)}
+  .btn{background:var(--primary);color:#fff;border:none;padding:11px 18px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+  .btn:hover{background:var(--primary-d)}
+  .btn.full{width:100%;margin-top:22px}
+  .hint{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.7;background:#f8fafc;padding:10px;border-radius:8px}
+  .err-msg{color:var(--err);font-size:13px;margin-top:10px;min-height:18px}
+  /* ---------- 布局 ---------- */
+  #app{display:none}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:#0f172a;color:#cbd5e1;padding:20px 0}
+  .brand{color:#fff;font-size:18px;font-weight:700;padding:0 22px 22px;display:flex;align-items:center;gap:10px}
+  .brand .logo{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#06b6d4);border-radius:8px;display:grid;place-items:center;font-size:18px}
+  .nav a{display:block;padding:12px 22px;color:#94a3b8;text-decoration:none;font-weight:500;cursor:pointer;border-left:3px solid transparent}
+  .nav a:hover{background:rgba(255,255,255,.05);color:#fff}
+  .nav a.active{background:rgba(59,130,246,.15);color:#fff;border-left-color:#3b82f6}
+  .nav .group{font-size:11px;color:#475569;padding:18px 22px 6px;text-transform:uppercase;letter-spacing:1px}
+  .main{margin-left:220px;min-height:100vh}
+  .topbar{height:60px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+  .topbar h2{font-size:17px}
+  .topbar .user{color:var(--muted);font-size:13px}
+  .content{padding:26px 28px}
+  .page{display:none}.page.active{display:block}
+  /* ---------- 卡片 ---------- */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+  .card{background:var(--card);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
+  .card .k{color:var(--muted);font-size:12px;margin-bottom:8px}
+  .card .v{font-size:28px;font-weight:700}
+  .card .d{font-size:12px;color:var(--muted);margin-top:6px}
+  .panel{background:var(--card);border-radius:12px;padding:20px;box-shadow:var(--shadow);margin-bottom:18px}
+  .panel h3{font-size:15px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  /* ---------- 指标条 ---------- */
+  .svc{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+  .svc:last-child{border:none}
+  .svc .name{font-weight:600}
+  .svc .bar{height:10px;background:#eef2f7;border-radius:6px;overflow:hidden;margin-top:5px}
+  .svc .bar i{display:block;height:100%;border-radius:6px}
+  .svc .val{font-size:12px;color:var(--muted)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+  .badge.ok{background:#dcfce7;color:#166534}.badge.warn{background:#fef3c7;color:#92400e}.badge.err{background:#fee2e2;color:#991b1b}
+  /* ---------- Agent 对话 ---------- */
+  .chat-wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+  .msg{padding:12px 14px;border-radius:10px;margin-bottom:12px;line-height:1.6;max-width:92%}
+  .msg.user{background:var(--primary);color:#fff;margin-left:auto}
+  .msg.agent{background:#f1f5f9;border:1px solid var(--line)}
+  .msg .meta{font-size:11px;color:var(--muted);margin-top:6px}
+  .msg.user .meta{color:#c7d2fe}
+  .events{background:#0b1220;color:#e2e8f0;border-radius:10px;padding:14px;font-family:Consolas,monospace;font-size:12px;height:320px;overflow:auto;line-height:1.8}
+  .events .n{color:#60a5fa}.events .t{color:#34d399}.events .e{color:#f87171}.events .s{color:#fbbf24}
+  .quick{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .chip{background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:12px}
+  .chip:hover{background:#dbeafe}
+  .input-row{display:flex;gap:8px}
+  .input-row input{flex:1;padding:12px;border:1px solid var(--line);border-radius:8px;outline:none;font-size:14px}
+  .input-row input:focus{border-color:var(--primary)}
+  .report{white-space:pre-wrap;line-height:1.7;font-size:13px}
+  /* ---------- 表格 ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:12px}
+  tr:hover{background:#f8fafc}
+  /* ---------- 时间线 ---------- */
+  .timeline{border-left:2px solid var(--line);margin-left:8px;padding-left:18px}
+  .tl-item{position:relative;padding:0 0 18px 0}
+  .tl-item::before{content:"";position:absolute;left:-25px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+  .tl-item .t{font-weight:600}.tl-item .m{color:var(--muted);font-size:12px;margin-top:3px}
+  .loading{color:var(--muted);font-size:13px}
+  .kv{font-size:13px;line-height:1.9}.kv b{color:var(--muted);font-weight:500;display:inline-block;width:90px}
+  .empty{color:var(--muted);text-align:center;padding:30px;font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- 登录 -->
+<div id="login">
+  <div class="login-box">
+    <h1>🛡️ OpsPilot AI</h1>
+    <div class="sub">企业级智能 IT 运维 Agent 平台</div>
+    <label>用户名</label>
+    <input id="lu" value="operator" autocomplete="username">
+    <label>密码</label>
+    <input id="lp" type="password" value="123456" autocomplete="current-password">
+    <button class="btn full" onclick="doLogin()">登 录</button>
+    <div class="err-msg" id="lerr"></div>
+    <div class="hint">
+      <b>演示账号</b>（密码均为 123456）：<br>
+      operator 运维员 · manager 运维负责人（可审批）· admin 管理员（可管理知识库）
+    </div>
+  </div>
+</div>
+
+<!-- 主应用 -->
+<div id="app">
+  <div class="sidebar">
+    <div class="brand"><span class="logo">⚙</span> OpsPilot AI</div>
+    <div class="nav">
+      <div class="group">工作台</div>
+      <a data-p="dash" class="active" onclick="go('dash')">📊 运维总览</a>
+      <a data-p="agent" onclick="go('agent')">🤖 Agent 诊断</a>
+      <div class="group">管理</div>
+      <a data-p="knowledge" onclick="go('knowledge')">📚 知识库</a>
+      <a data-p="incident" onclick="go('incident')">🎫 故障工单</a>
+      <a data-p="approval" onclick="go('approval')">✅ 人工审批</a>
+      <a data-p="trace" onclick="go('trace')">🔍 执行轨迹</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <h2 id="ptitle">运维总览</h2>
+      <div class="user">👤 <span id="uname"></span> <span id="urole" class="badge ok" style="margin-left:8px"></span>
+        <button class="btn" style="padding:6px 12px;margin-left:14px;font-size:12px" onclick="logout()">退出</button>
+      </div>
+    </div>
+    <div class="content">
+      <!-- 总览 -->
+      <div class="page active" id="p-dash">
+        <div class="cards" id="statCards"></div>
+        <div class="panel">
+          <h3>🖥️ 微服务健康状态</h3>
+          <div id="svcList" class="loading">加载中...</div>
+        </div>
+        <div class="grid2">
+          <div class="panel"><h3>📋 最近 Agent 任务</h3><div id="recentTasks"></div></div>
+          <div class="panel"><h3>🧩 平台能力</h3>
+            <div class="kv">
+              <div><b>LLM 模式</b><span id="llmmode"></span></div>
+              <div><b>数据库</b><span id="dbmode"></span></div>
+              <div><b>知识库</b><span id="kbmode"></span></div>
+              <div><b>Embedding</b><span id="embmode"></span></div>
+              <div><b>工具数量</b>7 个（日志/监控/数据库/RAG/工单/重启/通知）</div>
+              <div><b>Agent 编排</b>Planner → Executor → Analyzer → Approval → Reporter</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent -->
+      <div class="page" id="p-agent">
+        <div class="panel">
+          <h3>💬 向 OpsPilot 描述故障</h3>
+          <div class="quick">
+            <span class="chip" onclick="fillQ(this)">今天下午订单服务出现大量 HTTP 500 错误，帮我分析原因并给出处理建议</span>
+            <span class="chip" onclick="fillQ(this)">支付服务响应变慢，日志显示 Redis 连接失败，帮我排查</span>
+            <span class="chip" onclick="fillQ(this)">帮我查一下历史上数据库连接池耗尽的处理方案</span>
+          </div>
+          <div class="input-row">
+            <input id="q" placeholder="例如：订单服务出现大量 500 错误，帮我分析原因...">
+            <button class="btn" onclick="runAgent()">开始诊断</button>
+          </div>
+        </div>
+        <div class="chat-wrap">
+          <div class="panel"><h3>🗣️ 诊断对话</h3><div id="chat" style="min-height:300px"></div></div>
+          <div class="panel"><h3>⚡ 实时执行过程</h3><div id="events" class="events"><div class="s">等待任务启动...</div></div></div>
+        </div>
+        <div class="panel" id="reportPanel" style="display:none"><h3>📄 故障诊断报告</h3><div id="report" class="report"></div></div>
+      </div>
+
+      <!-- 知识库 -->
+      <div class="page" id="p-knowledge">
+        <div class="panel">
+          <h3>🔎 语义检索测试</h3>
+          <div class="input-row"><input id="kq" placeholder="输入问题检索运维知识库，如：数据库连接池耗尽怎么办"><button class="btn" onclick="kbSearch()">检索</button></div>
+          <div id="kbResults" style="margin-top:16px"></div>
+        </div>
+        <div class="panel"><h3>📚 已入库文档</h3><div id="kbDocs"></div></div>
+      </div>
+
+      <!-- 工单 -->
+      <div class="page" id="p-incident">
+        <div class="panel"><h3>🎫 故障工单列表</h3><div id="incList"></div></div>
+      </div>
+
+      <!-- 审批 -->
+      <div class="page" id="p-approval">
+        <div class="panel"><h3>✅ 待办审批</h3><div id="apprList"></div></div>
+      </div>
+
+      <!-- 轨迹 -->
+      <div class="page" id="p-trace">
+        <div class="panel"><h3>🔍 任务执行轨迹</h3>
+          <div class="input-row" style="margin-bottom:18px"><input id="traceno" placeholder="输入任务编号，如 TASK-xxxx（留空显示最近任务）"><button class="btn" onclick="loadTrace()">查询轨迹</button></div>
+          <div id="traceBox"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='http://127.0.0.1:8000/api/v1';
+let TOKEN='', USER={};
+
+function $(id){return document.getElementById(id)}
+async function api(path,opt={}){
+  opt.headers=opt.headers||{};
+  if(TOKEN) opt.headers['Authorization']='Bearer '+TOKEN;
+  if(opt.body && typeof opt.body!=='string'){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(opt.body)}
+  const r=await fetch(API+path,opt);
+  const j=await r.json().catch(()=>({message:'解析失败'}));
+  if(!r.ok){throw new Error(j.detail||j.message||('HTTP '+r.status))}
+  return j;
+}
+async function doLogin(){
+  $('lerr').textContent='';
+  try{
+    const j=await api('/auth/login',{method:'POST',body:{username:$('lu').value,password:$('lp').value}});
+    TOKEN=j.data.access_token;USER=j.data;
+    $('login').style.display='none';$('app').style.display='block';
+    $('uname').textContent=j.data.nickname||j.data.username;
+    const role=j.data.role;$('urole').textContent={OPERATOR:'运维员',MANAGER:'负责人',ADMIN:'管理员'}[role]||role;
+    $('urole').className='badge '+(role==='ADMIN'?'err':role==='MANAGER'?'warn':'ok');
+    initDashboard();
+  }catch(e){$('lerr').textContent='登录失败：'+e.message}
+}
+function logout(){TOKEN='';location.reload()}
+const TITLES={dash:'运维总览',agent:'Agent 诊断',knowledge:'知识库',incident:'故障工单',approval:'人工审批',trace:'执行轨迹'};
+function go(p){
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nav a').forEach(e=>e.classList.remove('active'));
+  $('p-'+p).classList.add('active');
+  document.querySelector('.nav a[data-p="'+p+'"]').classList.add('active');
+  $('ptitle').textContent=TITLES[p];
+  if(p==='dash')initDashboard();
+  if(p==='knowledge'){loadDocs();kbStats()}
+  if(p==='incident')loadIncidents();
+  if(p==='approval')loadApprovals();
+}
+function fillQ(el){$('q').value=el.textContent}
+
+async function initDashboard(){
+  try{
+    const root=await (await fetch('http://127.0.0.1:8000/')).json();
+    $('llmmode').textContent=root.llm_mode==='real'?'真实 LLM (DeepSeek 兼容)':'规则引擎降级模式（免 Key 可演示）';
+    $('dbmode').textContent=root.database==='sqlite'?'SQLite（开箱即跑）':'PostgreSQL + pgvector';
+  }catch(e){}
+  try{
+    const kb=(await api('/knowledge/stats')).data;
+    $('kbmode').textContent=kb.documents+' 篇文档 / '+kb.chunks+' 个切片';
+    $('embmode').textContent=kb.embedding_provider+'（'+kb.embedding_dim+' 维）';
+  }catch(e){}
+  try{
+    const m=(await api('/incidents/metrics/overview')).data;
+    const svcs=Object.entries(m);
+    const errs=svcs.filter(([k,v])=>v.status!=='HEALTHY').length;
+    const avgErr=(svcs.reduce((s,[k,v])=>s+v.error_rate,0)/svcs.length).toFixed(1);
+    let tasks=0;try{tasks=(await api('/agent/tasks')).data.length}catch(e){}
+    $('statCards').innerHTML=`
+      <div class="card"><div class="k">微服务总数</div><div class="v">${svcs.length}</div><div class="d">模拟服务实例</div></div>
+      <div class="card"><div class="k">异常服务</div><div class="v" style="color:${errs?'var(--err)':'var(--ok)'}">${errs}</div><div class="d">需关注的服务</div></div>
+      <div class="card"><div class="k">平均错误率</div><div class="v" style="color:var(--warn)">${avgErr}%</div><div class="d">全部服务均值</div></div>
+      <div class="card"><div class="k">Agent 任务</div><div class="v">${tasks}</div><div class="d">累计诊断次数</div></div>`;
+    $('svcList').innerHTML=svcs.map(([name,v])=>{
+      const ok=v.status==='HEALTHY';
+      const color=v.error_rate>5?'var(--err)':v.error_rate>1?'var(--warn)':'var(--ok)';
+      return `<div class="svc"><div><div class="name">${name}</div><div class="val">QPS ${v.request_qps} · P99 ${v.p99_response_time_ms}ms</div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:12px"><span>错误率 ${v.error_rate}%</span><span class="badge ${ok?'ok':'err'}">${ok?'健康':'降级'}</span></div>
+        <div class="bar"><i style="width:${Math.min(v.error_rate*6,100)}%;background:${color}"></i></div>
+        <div class="val">CPU ${v.cpu_usage}% · 内存 ${v.memory_usage}%</div></div></div>`;
+    }).join('');
+  }catch(e){$('svcList').innerHTML='<div class="empty">加载失败：'+e.message+'</div>'}
+  try{
+    const ts=(await api('/agent/tasks')).data.slice(0,5);
+    $('recentTasks').innerHTML=ts.length?ts.map(t=>`<div class="svc"><div><div class="name">${t.title}</div><div class="val">${t.task_no} · ${t.service_name||'-'}</div></div>
+      <span class="badge ${t.status==='COMPLETED'?'ok':'warn'}">${t.status}</span></div>`).join(''):'<div class="empty">暂无任务，去 Agent 诊断发起一次</div>';
+  }catch(e){}
+}
+
+async function runAgent(){
+  const q=$('q').value.trim();
+  if(q.length<5){alert('问题至少 5 个字');return}
+  $('chat').innerHTML='';$('events').innerHTML='';$('reportPanel').style.display='none';
+  addMsg('user',q);
+  const es=$('events');
+  const append=(cls,text)=>{es.innerHTML+='<div class="'+cls+'">'+text+'</div>';es.scrollTop=es.scrollHeight};
+  append('s','▶ 任务已提交，Agent 开始规划...');
+  try{
+    const r=await fetch(API+'/agent/tasks/stream',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},body:JSON.stringify({question:q})});
+    const reader=r.body.getReader(),dec=new TextDecoder();let buf='';
+    let taskNo='';
+    while(true){
+      const {value,done}=await reader.read();if(done)break;
+      buf+=dec.decode(value,{stream:true});
+      let idx;
+      while((idx=buf.indexOf('\n\n'))>=0){
+        const block=buf.slice(0,idx);buf=buf.slice(idx+2);
+        const lines=block.split('\n');let ev='',data='';
+        lines.forEach(l=>{if(l.startsWith('event: '))ev=l.slice(7);if(l.startsWith('data: '))data=l.slice(6)});
+        if(!ev)continue;
+        let d={};try{d=JSON.parse(data)}catch(e){}
+        if(ev==='node')append('n','● ['+d.node+'] '+d.message);
+        if(ev==='plan')append('s','  └ 选中工具: '+(d.tools||[]).join(' → '));
+        if(ev==='tool_result')append(d.success?'t':'e','  └ 工具 '+d.tool+' '+(d.success?'✓':'✗')+' '+d.summary);
+        if(ev==='approval_required')append('e','  └ ⚠ 高风险操作 '+d.action_name+'，等待审批');
+        if(ev==='result')taskNo=d.task_no;
+      }
+    }
+    append('s','✅ 执行完成，生成报告...');
+    // 拉报告
+    const rep=(await api('/agent/tasks/'+taskNo)).data;
+    addMsg('agent',rep.root_cause||'诊断完成',rep.final_report?'<div class="meta">共 '+rep.tool_calls.length+' 次工具调用 · '+rep.execution_time_ms+'ms</div>':'');
+    $('report').textContent=rep.final_report||'无报告';
+    $('reportPanel').style.display='block';
+  }catch(e){append('e','✗ 失败：'+e.message);alert('诊断失败：'+e.message)}
+}
+function addMsg(role,text,meta){
+  const d=document.createElement('div');d.className='msg '+role;
+  d.innerHTML=text+(meta||'');
+  $('chat').appendChild(d);$('chat').scrollTop=$('chat').scrollHeight;
+}
+
+async function kbSearch(){
+  const q=$('kq').value.trim();if(!q)return;
+  $('kbResults').innerHTML='<div class="loading">检索中...</div>';
+  try{
+    const d=(await api('/knowledge/search?query='+encodeURIComponent(q)+'&top_k=4')).data;
+    $('kbResults').innerHTML=d.results.length?d.results.map((r,i)=>`
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">结果 ${i+1} · 相似度 ${r.score} · 来源 ${r.metadata&&r.metadata.source||'-'}</div>
+        <div style="line-height:1.7;white-space:pre-wrap">${r.content.slice(0,300)}...</div>
+      </div>`).join(''):'<div class="empty">未检索到相关内容</div>';
+  }catch(e){$('kbResults').innerHTML='<div class="empty">检索失败：'+e.message+'</div>'}
+}
+async function kbStats(){}
+async function loadDocs(){
+  try{
+    const d=(await api('/knowledge/documents')).data;
+    $('kbDocs').innerHTML=d.length?`<table><tr><th>文档名</th><th>类型</th><th>切片数</th><th>状态</th></tr>${d.map(x=>`<tr><td>📄 ${x.filename}</td><td>${x.file_type}</td><td>${x.chunk_count}</td><td><span class="badge ok">${x.status}</span></td></tr>`).join('')}</table>`:'<div class="empty">暂无文档</div>';
+  }catch(e){$('kbDocs').innerHTML='<div class="empty">加载失败</div>'}
+}
+async function loadIncidents(){
+  try{
+    const d=(await api('/incidents/')).data;
+    $('incList').innerHTML=d.length?`<table><tr><th>工单号</th><th>标题</th><th>服务</th><th>级别</th><th>状态</th></tr>${d.map(x=>`<tr><td>${x.incident_no}</td><td>${x.title}</td><td>${x.service_name}</td><td>${x.severity}</td><td><span class="badge ${x.status==='RESOLVED'?'ok':'warn'}">${x.status}</span></td></tr>`).join('')}</table>`:'<div class="empty">暂无工单。Agent 诊断案例中会创建工单。</div>';
+  }catch(e){$('incList').innerHTML='<div class="empty">加载失败：'+e.message+'</div>'}
+}
+async function loadApprovals(){
+  try{
+    const d=(await api('/agent/approvals')).data;
+    $('apprList').innerHTML=d.length?`<table><tr><th>ID</th><th>操作</th><th>风险</th><th>状态</th><th>时间</th></tr>${d.map(x=>`<tr><td>${x.id}</td><td>${x.action_name}</td><td><span class="badge err">${x.risk_level}</span></td><td><span class="badge ${x.status==='PENDING'?'warn':'ok'}">${x.status}</span></td><td>${x.created_at}</td></tr>`).join('')}</table>`:'<div class="empty">暂无审批记录。当前规则引擎规划的工具均为低风险自动执行；配置真实 LLM 后可触发高风险操作审批演示。</div>';
+  }catch(e){$('apprList').innerHTML='<div class="empty">加载失败：'+e.message+'</div>'}
+}
+async function loadTrace(){
+  const no=$('traceno').value.trim();
+  try{
+    let rep;
+    if(no){rep=(await api('/agent/tasks/'+no)).data}
+    else{const ts=(await api('/agent/tasks')).data;if(!ts.length){$('traceBox').innerHTML='<div class="empty">暂无任务</div>';return}rep=(await api('/agent/tasks/'+ts[0].task_no)).data}
+    let html=`<div class="kv" style="margin-bottom:18px"><div><b>任务编号</b>${rep.task_no}</div><div><b>问题</b>${rep.question}</div><div><b>状态</b>${rep.status}</div><div><b>耗时</b>${rep.execution_time_ms}ms</div><div><b>根因</b>${rep.root_cause||'-'}</div></div>`;
+    html+='<h3 style="font-size:14px;margin:10px 0">工作流节点</h3><div class="timeline">';
+    rep.steps.forEach(s=>{html+=`<div class="tl-item"><div class="t">${s.node_name} · ${s.action}</div><div class="m">${s.status} · ${s.duration_ms}ms ${s.output_data?'· '+JSON.stringify(s.output_data).slice(0,100):''}</div></div>`});
+    html+='</div>';
+    html+='<h3 style="font-size:14px;margin:18px 0 10px">工具调用明细</h3><table><tr><th>工具</th><th>参数</th><th>状态</th><th>耗时</th></tr>'+rep.tool_calls.map(t=>`<tr><td>${t.tool_name}</td><td style="font-size:12px;color:var(--muted)">${JSON.stringify(t.arguments).slice(0,80)}</td><td><span class="badge ${t.status==='SUCCESS'?'ok':'err'}">${t.status}</span></td><td>${t.duration_ms}ms</td></tr>`).join('')+'</table>';
+    $('traceBox').innerHTML=html;
+  }catch(e){$('traceBox').innerHTML='<div class="empty">查询失败：'+e.message+'</div>'}
+}
+// Enter 快捷
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')runAgent()});
+$('kq').addEventListener('keydown',e=>{if(e.key==='Enter')kbSearch()});
+</script>
+</body>
+</html>

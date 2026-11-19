@@ -1,0 +1,24 @@
+# ===== 完整依赖（可选，接真实 LLM / RAG 模型时才需要）=====
+-r requirements-core.txt
+
+# Agent 框架（本项目的 Agent 核心用 LangGraph 实现；
+# 未安装时会自动切换到内置的轻量图引擎，功能一致，方便零依赖演示）
+langchain>=0.2
+langchain-core>=0.2
+langchain-openai>=0.1
+langgraph>=0.1
+
+# RAG 文本处理
+langchain-text-splitters>=0.2
+langchain-community>=0.2
+
+# PostgreSQL + pgvector（切生产数据库时启用）
+# asyncpg>=0.29
+# pgvector>=0.2
+# langchain-postgres>=0.1
+
+# 真实中文 Embedding（EMBEDDING_PROVIDER=model 时启用，体积较大）
+# sentence-transformers>=3.0
+
+# 可观测性
+# langfuse>=2.0
