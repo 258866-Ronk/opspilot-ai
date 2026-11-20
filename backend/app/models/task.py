@@ -1,7 +1,7 @@
 """
 Agent 任务 / 步骤 / 工具调用记录 三张表
 ======================================
-面试高频问题：为什么 agent_steps 和 tool_executions 要分开存？
+设计要点：为什么 agent_steps 和 tool_executions 要分开存？
   答：一次「任务规划」是一个 step，但它内部可能调用 3 个工具。
       step 记录「Agent 在想什么、这一步结论是什么」，
       tool_execution 记录「具体调了哪个工具、传了什么参、返回了什么」。

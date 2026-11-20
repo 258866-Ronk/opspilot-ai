@@ -8,7 +8,7 @@
   2. pydantic-settings 的 BaseSettings 会自动读取环境变量和 .env 文件，
      而且带类型校验和默认值——比如 DEBUG 会自动把 "true" 转成布尔 True。
 
-面试点：
+设计要点：
   - 配置与代码分离（12-Factor App 原则）
   - 用 Pydantic 做启动前的配置校验，配置错了服务根本起不来，fail-fast
 """

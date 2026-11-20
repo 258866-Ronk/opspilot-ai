@@ -14,7 +14,7 @@
 
 ---
 
-## 一、项目亮点（面试速览）
+## 一、项目亮点速览
 
 - **真 Agent，不是固定流程**：Planner 根据问题类型**自主选择工具**（HTTP 500 → 日志+监控+数据库+RAG；Redis 故障 → 监控+日志+RAG），不同问题走不同工具组合。
 - **双栈可降级设计**：
@@ -104,7 +104,7 @@ opspilot-ai/
 ├── frontend/index.html  # 免构建控制台
 ├── database/init.sql    # PostgreSQL DDL
 ├── mock-data/           # 模拟运维数据
-├── docs/                # PRD / 架构 / 数据库 / 面试讲解
+├── docs/                # PRD / 架构 / 数据库
 └── tests/               # 端到端 + 审批 + 评测脚本与报告
 ```
 
@@ -118,7 +118,3 @@ cd backend && .venv/Scripts/python.exe ../tests/test_approval.py
 # Agent 评测（32 案例，生成 eval_report.json）
 python tests/evaluate.py
 ```
-
-## 八、面试讲解
-
-见 `docs/interview.md` —— 包含「为什么这样设计」「高频问题标准答案」「简历项目描述」。

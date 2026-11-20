@@ -1,7 +1,7 @@
 """
 安全模块：密码哈希 + JWT 令牌 + RBAC 权限
 =========================================
-面试点：
+设计要点：
   - 密码绝不能明文存储 → 用 passlib bcrypt 加盐哈希
   - JWT 无状态鉴权 → 服务端不存 session，适合分布式
   - RBAC 基于角色 → 用依赖注入把「当前用户」和「角色要求」注入到接口
@@ -18,7 +18,7 @@ ALGORITHM = "HS256"
 
 
 def _safe_bytes(password: str) -> bytes:
-    # bcrypt 限制密码 <= 72 字节，超长需截断（面试可提这个安全细节）
+    # bcrypt 限制密码 <= 72 字节，超长需截断
     return password.encode("utf-8")[:72]
 
 

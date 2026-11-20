@@ -1,7 +1,7 @@
 """
 工具系统基座：定义工具的统一契约、风险等级、注册中心、执行器
 =============================================================
-这是「Agent 工程」里最核心的设计之一。面试要能讲清楚：
+这是「Agent 工程」里最核心的设计之一：
 
 1. 为什么工具要统一契约？
    Agent 需要用统一的格式描述工具（名字/用途/参数 schema），LLM 才能做 Function Calling。
@@ -73,7 +73,7 @@ class ToolSpec:
     retries: int = 1
 
     def signature_of(self, args: dict) -> str:
-        """参数签名：用于审批后比对，防止参数被篡改（面试重点）"""
+        """参数签名：用于审批后比对，防止参数被篡改"""
         raw = json.dumps(args, sort_keys=True, ensure_ascii=False, default=str)
         return hashlib.sha256(raw.encode()).hexdigest()[:16]
 

@@ -130,7 +130,7 @@ async def approve_task(session: AsyncSession, approval_id: int,
                        decision: str, reviewer_id: int,
                        comment: str = "", signature: str | None = None) -> dict:
     """
-    审批高风险操作：后端必须校验 5 件事（面试重点）
+    审批高风险操作：后端必须校验 5 件事
     1. 审批是否存在  2. 是否仍 PENDING  3. 审批人权限
     4. 是否重复审批  5. 参数签名是否一致（防篡改）
     """

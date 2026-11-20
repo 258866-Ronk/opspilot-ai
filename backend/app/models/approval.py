@@ -16,7 +16,7 @@ class Approval(Base):
     task_id: Mapped[int | None] = mapped_column(ForeignKey("agent_tasks.id"), index=True)
     action_name: Mapped[str] = mapped_column(String(100))
     action_arguments: Mapped[dict | None] = mapped_column(JSON)
-    # 参数签名：审批后再次执行时会比对，防止 Agent 审批后偷偷改参数（面试重点）
+    # 参数签名：审批后再次执行时会比对，防止 Agent 审批后偷偷改参数
     arguments_signature: Mapped[str | None] = mapped_column(String(128))
     risk_level: Mapped[str | None] = mapped_column(String(20))
     requested_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"))

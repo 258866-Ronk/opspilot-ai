@@ -10,7 +10,7 @@ Agent 图编排：轻量图引擎 + LangGraph 兼容
 
 为什么不用 LangGraph 原生？
   为了让项目零依赖即可运行（你机器上 LangGraph 可能没装）。
-  这套调度逻辑与 LangGraph 的 StateGraph 语义完全一致——面试时我会告诉你如何一行行迁移到 LangGraph。
+  这套调度逻辑与 LangGraph 的 StateGraph 语义完全一致——可据此逐行迁移到 LangGraph。
   代码里也提供了 build_langgraph() 供装了依赖时使用。
 """
 from typing import Callable, Awaitable

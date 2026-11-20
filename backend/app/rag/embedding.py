@@ -6,7 +6,7 @@ Embedding 封装：双栈设计
 - 可选 model：填了 EMBEDDING_PROVIDER=model 且装了 sentence-transformers，
   用真实 BGE 中文模型（语义效果更好）。
 
-面试要点：
+设计要点：
   - 向量维度必须与存储一致（config 里 EMBEDDING_DIM）。
   - 真实项目要处理「模型版本切换」——换模型必须重新向量化全库，否则向量空间不一致。
 """
